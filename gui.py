@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
+        MainWindow.setObjectName("Simple Image Processor By Abdelrahman Baba")
         MainWindow.resize(1052, 572)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -190,14 +190,14 @@ class Ui_MainWindow(object):
         self.thresholdValue = QtWidgets.QLineEdit(self.groupBox_2)
         self.thresholdValue.setObjectName("thresholdValue")
         self.gridLayout.addWidget(self.thresholdValue, 0, 1, 1, 1)
-        self.discardThreshold = QtWidgets.QPushButton(self.groupBox_2)
-        self.discardThreshold.setEnabled(False)
-        self.discardThreshold.setObjectName("discardThreshold")
-        self.gridLayout.addWidget(self.discardThreshold, 1, 1, 1, 1)
         self.thresholdAction = QtWidgets.QPushButton(self.groupBox_2)
         self.thresholdAction.setEnabled(False)
         self.thresholdAction.setObjectName("thresholdAction")
         self.gridLayout.addWidget(self.thresholdAction, 0, 2, 1, 1)
+        self.discardThreshold = QtWidgets.QPushButton(self.groupBox_2)
+        self.discardThreshold.setEnabled(False)
+        self.discardThreshold.setObjectName("discardThreshold")
+        self.gridLayout.addWidget(self.discardThreshold, 1, 0, 1, 3)
         self.verticalLayout_8.addWidget(self.groupBox_2)
         self.groupBox_4 = QtWidgets.QGroupBox(self.tab)
         self.groupBox_4.setObjectName("groupBox_4")
@@ -300,7 +300,7 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionSave)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         self.exit.triggered.connect(MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -322,8 +322,8 @@ class Ui_MainWindow(object):
         self.groupBox_2.setTitle(_translate("MainWindow", "Threshold"))
         self.label_4.setText(_translate("MainWindow", "Value:"))
         self.thresholdValue.setText(_translate("MainWindow", "127"))
-        self.discardThreshold.setText(_translate("MainWindow", "Discard Change"))
         self.thresholdAction.setText(_translate("MainWindow", "Threshold!"))
+        self.discardThreshold.setText(_translate("MainWindow", "Discard Change"))
         self.groupBox_4.setTitle(_translate("MainWindow", "Bit Plane"))
         self.bitplane.setText(_translate("MainWindow", "Generate Bit Planes"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Thresholding And Bit Planes"))
