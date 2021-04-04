@@ -25,6 +25,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.loadedImage = None
         self.modifiedImage = None
         self.previewImage = None
+        self.modeifiedBACKUPImage = None
         self.width = None
         self.height = None
         self.prevHeight = None
@@ -52,7 +53,58 @@ class Window(QMainWindow, Ui_MainWindow):
         self.newTab.triggered.connect(self.new_preview_tab)
         self.actionLive_Preview.triggered.connect(self.live_preview_trigger)
         self.actionRestore_Original.triggered.connect(self.restoreOriginal)
-        self.actionSave.triggered.connect
+        self.actionSave.triggered.connect(self.save_file)
+        self.actionpng.triggered.connect(self.export_png)
+        self.actionjpeg.triggered.connect(self.export_jpeg)
+        self.thresholdAction.clicked.connect(self.thresholing)
+        self.discardThreshold.clicked.connect(self.discard_threshold)
+
+    def thresholing(self):
+        try:
+            value = int(self.thresholdValue.text())
+            self.modeifiedBACKUPImage =self.modifiedImage
+            self.modifiedImage = cv2.threshold(self.modifiedImage, value, 255, cv2.THRESH_BINARY)[1]
+            self.previewImage = self.modifiedImage
+            self.set_preview()
+        except Exception:
+            self.error_dialog.setText("Error Occurred!")
+            self.error_dialog.show()
+    def discard_threshold(self):
+        try:
+            self.modifiedImage = self.modeifiedBACKUPImage
+            self.previewImage = self.modifiedImage
+            self.set_preview()
+        except Exception:
+            self.error_dialog.setText("Error Occurred!")
+            self.error_dialog.show()
+
+    def save_file(self):
+        try:
+            cv2.imwrite(self.fileName, self.modifiedImage)
+        except Exception:
+            self.error_dialog.setText("Error Occurred!")
+            self.error_dialog.show()
+
+    def export_png(self):
+        try:
+            fileName = QFileDialog.getSaveFileName(self, "Save F:xile",
+                                                   "/home/untitled.png",
+                                                   "Images (*.png)")[0]
+            cv2.imwrite(fileName, self.modifiedImage)
+
+        except Exception:
+            self.error_dialog.setText("Error Occurred!")
+            self.error_dialog.show()
+    def export_jpeg(self):
+        try:
+            fileName = QFileDialog.getSaveFileName(self, "Save F:xile",
+                                                   "/home/untitled.png",
+                                                   "Images (*.jpg)")[0]
+            cv2.imwrite(fileName, self.modifiedImage)
+
+        except Exception:
+            self.error_dialog.setText("Error Occurred!")
+            self.error_dialog.show()
 
 
     def restoreOriginal(self):
@@ -99,12 +151,21 @@ class Window(QMainWindow, Ui_MainWindow):
             self.load_image()
 
     def load_image(self):
+
         self.loadedImage = cv2.imread(self.fileName, cv2.IMREAD_GRAYSCALE)
         self.previewImage = self.loadedImage
         self.modifiedImage = self.loadedImage
         self.height, self.width = self.loadedImage.shape
         self.prevHeight, self.prevWidth = self.loadedImage.shape
         self.set_preview()
+        self.enableBottons()
+
+    def enableBottons(self):
+        self.actionjpeg.setEnabled(True)
+        self.actionpng.setEnabled(True)
+        self.actionSave.setEnabled(True)
+        self.newTab.setEnabled(True)
+
 
     def set_preview(self):
         bytes_per_line = self.prevWidth
@@ -177,7 +238,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modifiedImage = cv2.convertScaleAbs(self.loadedImage, alpha=a, beta=b)
         dim = (self.prevWidth, self.prevHeight)
         self.previewImage = cv2.resize(self.modifiedImage, dim)
-        self.set_preview()
+        self.set_preview(self.previewImage)
 
 
 if __name__ == '__main__':

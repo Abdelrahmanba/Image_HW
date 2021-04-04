@@ -24,8 +24,8 @@
     <normaloff>icons/opencv_icon_132129.ico</normaloff>icons/opencv_icon_132129.ico</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
      <widget class="QScrollArea" name="scrollArea">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -114,7 +114,7 @@
       </widget>
      </widget>
     </item>
-    <item row="0" column="1">
+    <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="accessibleName">
        <string/>
@@ -151,6 +151,9 @@
            </item>
            <item>
             <widget class="QSlider" name="brightSlider">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <number>1</number>
              </property>
@@ -198,6 +201,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="dicardBrightness">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Discard Brightness Change</string>
              </property>
@@ -205,6 +211,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="brightAdvCheck">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Advanced</string>
              </property>
@@ -275,6 +284,9 @@
            </item>
            <item>
             <widget class="QSlider" name="contrastSlider">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="minimum">
               <number>1</number>
              </property>
@@ -322,6 +334,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="discardContrast">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Discard Contrast Change</string>
              </property>
@@ -329,6 +344,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="contrastAdvCheck">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Advanced</string>
              </property>
@@ -381,11 +399,58 @@
        <attribute name="title">
         <string>Thresholding</string>
        </attribute>
-      </widget>
-      <widget class="QWidget" name="bitPlanes">
-       <attribute name="title">
-        <string>Bit Planes</string>
-       </attribute>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>Threshold</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Value:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="thresholdValue">
+             <property name="text">
+              <string>127</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="discardThreshold">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Discard Change</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="thresholdAction">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Threshold!</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="title">
+           <string>GroupBox</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -423,14 +488,6 @@
     <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
-   <widget class="QMenu" name="menuActions">
-    <property name="title">
-     <string>Actions</string>
-    </property>
-    <addaction name="actionRestore_Original"/>
-    <addaction name="actionUndo"/>
-    <addaction name="actionRedo"/>
-   </widget>
    <widget class="QMenu" name="menuPreview">
     <property name="title">
      <string>Preview</string>
@@ -440,7 +497,6 @@
     <addaction name="newTab"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuActions"/>
    <addaction name="menuPreview"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
@@ -456,8 +512,11 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="open"/>
    <addaction name="actionZoom_In"/>
    <addaction name="actionZoom_Out"/>
+   <addaction name="actionRestore_Original"/>
+   <addaction name="actionSave"/>
   </widget>
   <action name="actionNewWindow">
    <property name="text">
@@ -480,6 +539,9 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normaloff>icons/file-save.png</normaloff>icons/file-save.png</iconset>
@@ -504,34 +566,31 @@
    </property>
   </action>
   <action name="actionjpeg">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>jpeg</string>
    </property>
   </action>
   <action name="actionpng">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>png</string>
    </property>
   </action>
   <action name="actionRestore_Original">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/baseline_restore_page_black_24dp.png</normaloff>icons/baseline_restore_page_black_24dp.png</iconset>
+   </property>
    <property name="text">
     <string>Restore Original</string>
-   </property>
-  </action>
-  <action name="actionUndo">
-   <property name="text">
-    <string>Undo </string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Z</string>
-   </property>
-  </action>
-  <action name="actionRedo">
-   <property name="text">
-    <string>Redo</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Y</string>
    </property>
   </action>
   <action name="actionLive_Preview">
@@ -546,11 +605,17 @@
    </property>
   </action>
   <action name="newTab">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Open new tab</string>
    </property>
   </action>
   <action name="actionZoom_Out">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normalon>icons/baseline_zoom_out_black_20.png</normalon>
@@ -564,6 +629,9 @@
    </property>
   </action>
   <action name="actionZoom_In">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normaloff>icons/baseline_zoom_in_black_20.png</normaloff>icons/baseline_zoom_in_black_20.png</iconset>
