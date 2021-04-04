@@ -129,6 +129,9 @@
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QGroupBox" name="groupBox">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="title">
            <string>Brightness</string>
           </property>
@@ -397,11 +400,14 @@
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>Thresholding</string>
+        <string>Thresholding And Bit Planes</string>
        </attribute>
-       <layout class="QFormLayout" name="formLayout">
-        <item row="0" column="1">
+       <layout class="QVBoxLayout" name="verticalLayout_8">
+        <item>
          <widget class="QGroupBox" name="groupBox_2">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="title">
            <string>Threshold</string>
           </property>
@@ -420,16 +426,6 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QPushButton" name="discardThreshold">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Discard Change</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="2">
             <widget class="QPushButton" name="thresholdAction">
              <property name="enabled">
@@ -440,14 +436,36 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="0" colspan="3">
+            <widget class="QPushButton" name="discardThreshold">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Discard Change</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item>
          <widget class="QGroupBox" name="groupBox_4">
           <property name="title">
-           <string>GroupBox</string>
+           <string>Bit Plane</string>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <widget class="QPushButton" name="bitplane">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Generate Bit Planes</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>

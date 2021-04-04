@@ -2,6 +2,7 @@
 import sys
 
 import cv2
+import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage
 
@@ -24,6 +25,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.fileName = None
         self.loadedImage = None
         self.modifiedImage = None
+        self.thresholdImage = None
+
         self.previewImage = None
         self.modeifiedBACKUPImage = None
         self.width = None
@@ -56,23 +59,55 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSave.triggered.connect(self.save_file)
         self.actionpng.triggered.connect(self.export_png)
         self.actionjpeg.triggered.connect(self.export_jpeg)
-        self.thresholdAction.clicked.connect(self.thresholing)
+        self.thresholdAction.clicked.connect(self.thresholding)
         self.discardThreshold.clicked.connect(self.discard_threshold)
+        self.bitplane.clicked.connect(self.bit_planes)
 
-    def thresholing(self):
+    def bit_planes(self):
+        # Iterate over each pixel and change pixel value to binary using np.binary_repr() and store it in a list.
+        lst = []
+        for i in range(self.previewImage.shape[0]):
+            for j in range(self.previewImage.shape[1]):
+                lst.append(np.binary_repr(self.previewImage[i][j], width=8))
+
+        eight_bit_img = (np.array([int(i[0]) for i in lst], dtype=np.uint8) * 128).reshape(self.previewImage.shape[0], self.previewImage.shape[1])
+        seven_bit_img = (np.array([int(i[1]) for i in lst], dtype=np.uint8) * 64).reshape(self.previewImage.shape[0], self.previewImage.shape[1])
+        six_bit_img = (np.array([int(i[2]) for i in lst], dtype=np.uint8) * 32).reshape(self.previewImage.shape[0], self.previewImage.shape[1])
+        five_bit_img = (np.array([int(i[3]) for i in lst], dtype=np.uint8) * 16).reshape(self.previewImage.shape[0], self.previewImage.shape[1])
+        four_bit_img = (np.array([int(i[4]) for i in lst], dtype=np.uint8) * 8).reshape(self.previewImage.shape[0], self.previewImage.shape[1])
+        three_bit_img = (np.array([int(i[5]) for i in lst], dtype=np.uint8) * 4).reshape(self.previewImage.shape[0], self.previewImage.shape[1])
+        two_bit_img = (np.array([int(i[6]) for i in lst], dtype=np.uint8) * 2).reshape(self.previewImage.shape[0], self.previewImage.shape[1])
+        one_bit_img = (np.array([int(i[7]) for i in lst], dtype=np.uint8) * 1).reshape(self.previewImage.shape[0], self.previewImage.shape[1])
+
+        # Concatenate these images
+        finalTop = cv2.hconcat([eight_bit_img, seven_bit_img, six_bit_img, five_bit_img])
+        finalBottom = cv2.hconcat([four_bit_img, three_bit_img, two_bit_img, one_bit_img])
+        final = cv2.vconcat([finalTop, finalBottom])
+        cv2.imshow('Bit Planes', final)
+        cv2.waitKey(0)
+
+    def thresholding(self):
         try:
             value = int(self.thresholdValue.text())
-            self.modeifiedBACKUPImage =self.modifiedImage
-            self.modifiedImage = cv2.threshold(self.modifiedImage, value, 255, cv2.THRESH_BINARY)[1]
-            self.previewImage = self.modifiedImage
+            self.modeifiedBACKUPImage = self.modifiedImage
+            self.thresholdImage = cv2.threshold(self.modifiedImage, value, 255, cv2.THRESH_BINARY)[1]
+            self.previewImage = self.thresholdImage
+            dim = (self.prevWidth, self.prevHeight)
+            self.previewImage = cv2.resize(self.thresholdImage, dim)
             self.set_preview()
+            self.discardThreshold.setEnabled(True)
+
         except Exception:
             self.error_dialog.setText("Error Occurred!")
             self.error_dialog.show()
+
     def discard_threshold(self):
         try:
-            self.modifiedImage = self.modeifiedBACKUPImage
-            self.previewImage = self.modifiedImage
+            self.thresholdImage = self.modeifiedBACKUPImage
+            self.previewImage = self.modeifiedBACKUPImage
+            dim = (self.prevWidth, self.prevHeight)
+            self.previewImage = cv2.resize(self.modifiedImage, dim)
+            self.discardThreshold.setEnabled(False)
             self.set_preview()
         except Exception:
             self.error_dialog.setText("Error Occurred!")
@@ -110,8 +145,11 @@ class Window(QMainWindow, Ui_MainWindow):
     def restoreOriginal(self):
         self.modifiedImage = self.loadedImage
         self.previewImage = self.loadedImage
-        self.discard_brightness_change()
-        self.discard_contrast_change()
+        self.thresholdImage =self.loadedImage
+        self.brightSlider.setValue(50)
+        self.contrastSlider.setValue(50)
+        self.lastAlpha = 1
+        self.lastBeta = 0
         self.set_preview()
 
     def toogleAdv(self):
@@ -145,7 +183,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def file_browser(self):
         file = QFileDialog.getOpenFileName(
-            filter="(*.jpg, *.jpeg, *.jpe, *.jfif, *.png)")
+            filter="*.jpg, *.jpeg, *.png")
         if file[0]:
             self.fileName = file[0]
             self.load_image()
@@ -155,6 +193,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.loadedImage = cv2.imread(self.fileName, cv2.IMREAD_GRAYSCALE)
         self.previewImage = self.loadedImage
         self.modifiedImage = self.loadedImage
+        self.thresholdImage = self.loadedImage
         self.height, self.width = self.loadedImage.shape
         self.prevHeight, self.prevWidth = self.loadedImage.shape
         self.set_preview()
@@ -171,11 +210,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.brightSlider.setEnabled(True)
         self.contrastSlider.setEnabled(True)
         self.thresholdAction.setEnabled(True)
-        self.discardThreshold.setEnabled(True)
         self.discardContrast.setEnabled(True)
         self.dicardBrightness.setEnabled(True)
         self.contrastAdvCheck.setEnabled(True)
         self.brightAdvCheck.setEnabled(True)
+        self.bitplane.setEnabled(True)
 
 
     def set_preview(self):
@@ -208,9 +247,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.set_alpha_beta(alpha, beta)
 
     def set_alpha_beta(self, a, b):
+        self.discardThreshold.setEnabled(False)
         self.lastAlpha = a
         self.lastBeta = b
-        self.modifiedImage = cv2.convertScaleAbs(self.loadedImage, alpha=self.lastAlpha, beta=self.lastBeta)
+        self.modifiedImage = cv2.convertScaleAbs(self.thresholdImage, alpha=self.lastAlpha, beta=self.lastBeta)
         # set preview image
         dim = (self.prevWidth, self.prevHeight)
         self.previewImage = cv2.resize(self.modifiedImage, dim)
@@ -246,10 +286,10 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def discard_brightness_contrast_change(self, a, b):
         self.modifiedImage = self.loadedImage
-        self.modifiedImage = cv2.convertScaleAbs(self.loadedImage, alpha=a, beta=b)
+        self.modifiedImage = cv2.convertScaleAbs(self.thresholdImage, alpha=a, beta=b)
         dim = (self.prevWidth, self.prevHeight)
         self.previewImage = cv2.resize(self.modifiedImage, dim)
-        self.set_preview(self.previewImage)
+        self.set_preview()
 
 
 if __name__ == '__main__':
