@@ -165,6 +165,17 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionpng.setEnabled(True)
         self.actionSave.setEnabled(True)
         self.newTab.setEnabled(True)
+        self.actionZoom_Out.setEnabled(True)
+        self.actionZoom_In.setEnabled(True)
+        self.actionRestore_Original.setEnabled(True)
+        self.brightSlider.setEnabled(True)
+        self.contrastSlider.setEnabled(True)
+        self.thresholdAction.setEnabled(True)
+        self.discardThreshold.setEnabled(True)
+        self.discardContrast.setEnabled(True)
+        self.dicardBrightness.setEnabled(True)
+        self.contrastAdvCheck.setEnabled(True)
+        self.brightAdvCheck.setEnabled(True)
 
 
     def set_preview(self):
