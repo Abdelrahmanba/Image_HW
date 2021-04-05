@@ -1,7 +1,0 @@
-<RCC>
-  <qresource prefix="icons">
-    <file>ui/icons/file-exit.png</file>
-    <file>ui/icons/file-new.png</file>
-    <file>ui/icons/file-save.png</file>
-  </qresource>
-</RCC>
