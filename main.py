@@ -166,7 +166,7 @@ class Window(QMainWindow, Ui_MainWindow):
         height = int(self.previewImage.shape[0] * scale_percent / 100)
         dim = (width, height)
         self.prevWidth, self.prevHeight = dim
-        self.previewImage = cv2.resize(self.thresholdImage, dim)
+        self.previewImage = cv2.resize(self.modifiedImage, dim)
         self.set_preview()
 
     # ***********  brightness - contrast Code **********
@@ -251,6 +251,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.modifiedBACKUPImage = self.modifiedImage
             self.thresholdImage = cv2.threshold(self.modifiedImage, value, 255, cv2.THRESH_BINARY)[1]
             self.previewImage = self.thresholdImage
+            self.modifiedImage = self.thresholdImage
             dim = (self.prevWidth, self.prevHeight)
             self.previewImage = cv2.resize(self.thresholdImage, dim)
             self.set_preview()
@@ -262,6 +263,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def discard_threshold(self):
         try:
+            self.modifiedImage = self.modifiedBACKUPImage
             self.thresholdImage = self.modifiedBACKUPImage
             self.previewImage = self.modifiedBACKUPImage
             dim = (self.prevWidth, self.prevHeight)
