@@ -233,7 +233,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 image_rows.append(np.binary_repr(self.previewImage[i][j], width=8))
 
         for i in range(8):
-            image_1d_arr = np.array([int(j[i]) for j in image_rows], dtype=np.uint8) * pow(2, 7 - i)
+            image_1d_arr = np.array([int(j[i]) for j in image_rows], dtype=np.uint8) * 255
             image_2d_arr = image_1d_arr.reshape(self.previewImage.shape[0], self.previewImage.shape[1])
             bit_planes.append(image_2d_arr)
 
@@ -244,7 +244,7 @@ class Window(QMainWindow, Ui_MainWindow):
         cv2.imshow('Bit Planes', final)
         cv2.waitKey(0)
 
-    # ***********  thresholding code **********
+    # *********** thresholding code **********
     def thresholding(self):
         try:
             value = int(self.thresholdValue.text())
